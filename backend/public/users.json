@@ -1,7 +1,36 @@
 [
   {
+    "id": 1,
     "name": "angela",
     "email": "angel10@gmail.com",
-    "password": "angel10"
+    "password": "angel10",
+    "following": [],
+    "watchlist": [],
+    "comments": [],
+    "ratings": []
+  },
+  {
+    "id": 2,
+    "name": "dyah",
+    "email": "dyahrini@gmail.com",
+    "password": "dprri123",
+    "following": [],
+    "watchlist": [
+      1184918
+    ],
+    "comments": [
+      {
+        "id": 1734612111383,
+        "movieId": 1184918,
+        "text": "I love this movie!",
+        "timestamp": "2024-12-19T12:41:51.383Z"
+      }
+    ],
+    "ratings": [
+      {
+        "movieId": 1184918,
+        "rating": 5
+      }
+    ]
   }
 ]

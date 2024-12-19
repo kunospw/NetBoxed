@@ -1,0 +1,194 @@
+.player-page {
+  min-height: 100vh;
+  background-color: #14181c;
+  color: #fff;
+  padding-top: 70px; /* Make room for fixed navbar */
+}
+
+/* Fixed navbar styles - add to your Navbar.css */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.movie-header {
+  position: relative;
+  padding-top: 40vh;
+  margin-bottom: 2rem;
+}
+
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.backdrop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(20, 24, 28, 0.5), #14181c);
+}
+
+.movie-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.poster-container {
+  flex-shrink: 0;
+}
+
+.movie-poster {
+  width: 230px;
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.movie-info {
+  flex-grow: 1;
+}
+
+.movie-info h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.movie-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  color: #89a;
+}
+
+.movie-overview {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.trailer-section {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.trailer-container h2 {
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.watchlist-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: none;
+  background-color: #e50914;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.watchlist-btn.in-list {
+  background-color: #456;
+}
+
+.rating-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.star-btn.active {
+  color: #e50914;
+}
+
+.comments-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.comment-form {
+  margin-bottom: 2rem;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 100px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #2c3440;
+  border: 1px solid #456;
+  border-radius: 4px;
+  color: white;
+  resize: vertical;
+}
+
+.submit-comment {
+  padding: 0.75rem 1.5rem;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.comment {
+  background-color: #2c3440;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.comment-user {
+  font-weight: bold;
+}
+
+.comment-date {
+  color: #89a;
+}
+
+.comment-text {
+  line-height: 1.5;
+}

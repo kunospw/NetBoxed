@@ -1,0 +1,102 @@
+.profile-page {
+  background-color: #141414;
+  min-height: 100vh;
+  color: white;
+}
+
+.profile-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(to right, #000000, #141414);
+  border-radius: 8px;
+}
+
+.profile-info h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.profile-info p {
+  color: #999;
+  font-size: 1.1rem;
+}
+
+.profile-sections {
+  display: grid;
+  gap: 2rem;
+}
+
+.following-section,
+.watchlist-section {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.following-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.following-item {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+.following-item:hover {
+  transform: scale(1.05);
+}
+
+.following-name {
+  font-size: 1rem;
+  color: #fff;
+}
+
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.watchlist-item {
+  transition: transform 0.3s ease;
+}
+
+.watchlist-item:hover {
+  transform: scale(1.05);
+}
+
+.watchlist-item img {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.watchlist-item h3 {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    text-align: center;
+  }
+
+  .profile-info h1 {
+    font-size: 2rem;
+  }
+}

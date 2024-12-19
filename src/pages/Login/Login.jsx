@@ -29,7 +29,9 @@ const Login = () => {
       .then((data) => {
         console.log('Sign-In Response:', data);
         if (data.user) {
+          // Store both isLoggedIn and userId
           sessionStorage.setItem('isLoggedIn', 'true');
+          sessionStorage.setItem('userId', data.user.id); // Set userId in sessionStorage
           alert('Sign In successful!');
           window.location.href = '/'; // Redirect to home page
         } else {
@@ -41,6 +43,7 @@ const Login = () => {
         setError('Error during sign in.');
       });
   };
+  
 
   const handleSignUp = (e) => {
     e.preventDefault();
