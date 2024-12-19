@@ -6,7 +6,7 @@ import Player from './pages/Player/Player';
 
 const App = () => {
   const location = useLocation();
-  const isLoggedIn = sessionStorage.getItem('isLoggedIn'); // Sesuaikan sesuai implementasi autentikasi Anda
+  const isLoggedIn = sessionStorage.getItem('isLoggedIn'); // Adjust according to your authentication implementation
 
   useEffect(() => {
     console.log('Current location:', location.pathname);

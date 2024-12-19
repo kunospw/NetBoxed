@@ -29,8 +29,9 @@ const Login = () => {
       .then((data) => {
         console.log('Sign-In Response:', data);
         if (data.user) {
+          sessionStorage.setItem('isLoggedIn', 'true');
           alert('Sign In successful!');
-          window.location.href = '/'; // Redirect ke halaman utama
+          window.location.href = '/'; // Redirect to home page
         } else {
           setError(data.message);
         }
@@ -48,8 +49,8 @@ const Login = () => {
       email,
       password,
     };
-    console.log('Sign-Up Data:', newUser); // Debug data sebelum dikirim
-  
+    console.log('Sign-Up Data:', newUser); // Debug data before sending
+
     fetch('http://localhost:3001/sign-up', {
       method: 'POST',
       headers: {
@@ -58,11 +59,11 @@ const Login = () => {
       body: JSON.stringify(newUser),
     })
       .then((response) => {
-        console.log('Sign-Up Response Status:', response.status); // Debug status respons
+        console.log('Sign-Up Response Status:', response.status); // Debug response status
         return response.json();
       })
       .then((data) => {
-        console.log('Sign-Up Response Body:', data); // Debug isi respons
+        console.log('Sign-Up Response Body:', data); // Debug response body
         if (data.user) {
           alert('Sign Up successful!');
           setSignState('Sign In');
@@ -76,7 +77,6 @@ const Login = () => {
         setError('Error during sign up.');
       });
   };
-  
 
   return (
     <div className="login">
