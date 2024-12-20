@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": "9addf6a0-f87d-41f8-9347-002181cac842",
     "name": "angela",
     "email": "angel10@gmail.com",
     "password": "angel10",
@@ -10,13 +10,18 @@
     "ratings": []
   },
   {
-    "id": 2,
+    "id": "b69d9715-2496-4414-9dc9-96d70d6b32ba",
     "name": "dyah",
     "email": "dyahrini@gmail.com",
-    "password": "dprri123",
-    "following": [],
+    "passwordHash": "$2b$10$31txftJiX2VIeua0QxLRf.H4q9g8DY4Q3QdTUpooyODItpD3ifmQ6",
     "watchlist": [
       1184918
+    ],
+    "ratings": [
+      {
+        "movieId": 1184918,
+        "rating": 4
+      }
     ],
     "comments": [
       {
@@ -26,11 +31,23 @@
         "timestamp": "2024-12-19T12:41:51.383Z"
       }
     ],
-    "ratings": [
-      {
-        "movieId": 1184918,
-        "rating": 5
-      }
-    ]
+    "following": [
+      "9addf6a0-f87d-41f8-9347-002181cac842",
+      "5aee8efb-e314-4baf-b4c8-20610543447f"
+    ],
+    "followers": []
+  },
+  {
+    "id": "5aee8efb-e314-4baf-b4c8-20610543447f",
+    "name": "kuno",
+    "email": "kunosama@gmail.com",
+    "passwordHash": "$2b$10$.erAx/eHOqjLQHcCLVNJUePvrkfy3YW35/hL.Ms6iGTlEVU5igghi",
+    "watchlist": [],
+    "ratings": [],
+    "comments": [],
+    "following": [
+      "b69d9715-2496-4414-9dc9-96d70d6b32ba"
+    ],
+    "followers": []
   }
 ]

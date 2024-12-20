@@ -6,23 +6,31 @@ import './Player.css';
 
 const Player = () => {
   const { id } = useParams();
-  const userId = sessionStorage.getItem('userId');
-  const [movie, setMovie] = useState(null);
+  const userStr = sessionStorage.getItem('user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const userId = user ? user.id : null;  const [movie, setMovie] = useState(null);
   const [trailer, setTrailer] = useState(null);
   const [userRating, setUserRating] = useState(0);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const [error, setError] = useState(null);
 
   const TMDB_API_KEY = "377d12c928663a40f0a164f227fc1176";
 
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
+        if (!userId) {
+          setError("Please sign in to access all features");
+          return;
+        }
+
         // Fetch movie details
         const movieResponse = await fetch(
           `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`
         );
+        if (!movieResponse.ok) throw new Error('Failed to fetch movie data');
         const movieData = await movieResponse.json();
         setMovie(movieData);
 
@@ -30,6 +38,7 @@ const Player = () => {
         const videoResponse = await fetch(
           `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${TMDB_API_KEY}`
         );
+        if (!videoResponse.ok) throw new Error('Failed to fetch trailer data');
         const videoData = await videoResponse.json();
         const trailer = videoData.results.find(
           video => video.type === "Trailer" && video.site === "YouTube"
@@ -38,21 +47,26 @@ const Player = () => {
 
         // Fetch comments
         const commentsResponse = await fetch(`http://localhost:3001/movies/${id}/comments`);
+        if (!commentsResponse.ok) throw new Error('Failed to fetch comments');
         const commentsData = await commentsResponse.json();
         setComments(commentsData);
 
-        // Check if movie is in user's watchlist
+        // Check if movie is in user's watchlist and get rating
         const userResponse = await fetch(`http://localhost:3001/users/${userId}`);
+        if (!userResponse.ok) throw new Error('Failed to fetch user data');
         const userData = await userResponse.json();
+        
+        // Check watchlist using the Set data structure from server
         setIsInWatchlist(userData.watchlist.includes(parseInt(id)));
         
-        // Get user's rating if it exists
-        const userRating = userData.ratings?.find(r => r.movieId === parseInt(id));
-        if (userRating) {
-          setUserRating(userRating.rating);
+        // Check rating using the new ratings Map structure from server
+        const userRatingObj = userData.ratings.find(r => r.movieId === parseInt(id));
+        if (userRatingObj) {
+          setUserRating(userRatingObj.rating);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+        setError(error.message);
       }
     };
 
@@ -72,11 +86,12 @@ const Player = () => {
         }),
       });
       
-      if (response.ok) {
-        setUserRating(rating);
-      }
+      if (!response.ok) throw new Error('Failed to save rating');
+      const updatedUser = await response.json();
+      setUserRating(rating);
     } catch (error) {
       console.error("Error saving rating:", error);
+      setError("Failed to save rating. Please try again.");
     }
   };
 
@@ -92,11 +107,12 @@ const Player = () => {
         }),
       });
       
-      if (response.ok) {
-        setIsInWatchlist(true);
-      }
+      if (!response.ok) throw new Error('Failed to update watchlist');
+      const updatedUser = await response.json();
+      setIsInWatchlist(true);
     } catch (error) {
       console.error("Error updating watchlist:", error);
+      setError("Failed to update watchlist. Please try again.");
     }
   };
 
@@ -116,15 +132,28 @@ const Player = () => {
         }),
       });
       
-      if (response.ok) {
-        const newCommentData = await response.json();
-        setComments([newCommentData, ...comments]);
-        setNewComment('');
-      }
+      if (!response.ok) throw new Error('Failed to post comment');
+      const newCommentData = await response.json();
+      
+      // Fetch updated comments to ensure consistency with server
+      const commentsResponse = await fetch(`http://localhost:3001/movies/${id}/comments`);
+      if (!commentsResponse.ok) throw new Error('Failed to fetch updated comments');
+      const updatedComments = await commentsResponse.json();
+      setComments(updatedComments);
+      setNewComment('');
     } catch (error) {
       console.error("Error posting comment:", error);
+      setError("Failed to post comment. Please try again.");
     }
   };
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p className="error-message">{error}</p>
+      </div>
+    );
+  }
 
   if (!movie) return <div>Loading...</div>;
 
