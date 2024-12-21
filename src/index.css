@@ -10,3 +10,12 @@ body {
   color: white;
   font-family: "poppins";
 }
+:root {
+  --netflix-red: #e50914;
+  --netflix-black: #141414;
+  --netflix-dark-gray: #333;
+  --netflix-light-gray: #999;
+  --netflix-hover-overlay: rgba(255, 255, 255, 0.1);
+  --netflix-gradient: linear-gradient(to right, #000000, #141414);
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}

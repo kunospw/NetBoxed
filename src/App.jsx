@@ -4,6 +4,7 @@ import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Player from './pages/Player/Player';
 import Profile from './pages/Profile/Profile';
+import SearchResults from './pages/SearchResults/SearchResults';
 
 const App = () => {
   const location = useLocation();
@@ -23,6 +24,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/player/:id' element={isLoggedIn ? <Player /> : <Navigate to="/login" />} />
         <Route path="/profile/:id"  element={isLoggedIn ? <Profile /> : <Navigate to="/login" />} />
+        <Route path="/search" element={isLoggedIn ? <SearchResults /> : <Navigate to="/login" />} />
       </Routes>
     </div>
   );

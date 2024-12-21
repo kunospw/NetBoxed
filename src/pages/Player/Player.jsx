@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
@@ -8,16 +8,69 @@ const Player = () => {
   const { id } = useParams();
   const userStr = sessionStorage.getItem('user');
   const user = userStr ? JSON.parse(userStr) : null;
-  const userId = user ? user.id : null;  const [movie, setMovie] = useState(null);
+  const userId = user ? user.id : null;
+  const [movie, setMovie] = useState(null);
   const [trailer, setTrailer] = useState(null);
   const [userRating, setUserRating] = useState(0);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [error, setError] = useState(null);
+  const [friendsRatings, setFriendsRatings] = useState([]);
 
   const TMDB_API_KEY = "377d12c928663a40f0a164f227fc1176";
 
+  // Memoize fetch functions to prevent unnecessary rerenders
+  const fetchComments = useCallback(async () => {
+    try {
+      const commentsResponse = await fetch(`http://localhost:3001/movies/${id}/comments`);
+      if (!commentsResponse.ok) throw new Error('Failed to fetch comments');
+      const commentsData = await commentsResponse.json();
+      setComments(commentsData);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  }, [id]);
+
+  const fetchFriendsRatings = useCallback(async () => {
+    if (!userId) return;
+    
+    try {
+      const userResponse = await fetch(`http://localhost:3001/users/${userId}`);
+      if (!userResponse.ok) throw new Error('Failed to fetch user data');
+      const userData = await userResponse.json();
+
+      const friendsRatingsPromises = userData.following.map(async (friendId) => {
+        const friendResponse = await fetch(`http://localhost:3001/users/${friendId}`);
+        if (!friendResponse.ok) return null;
+        const friendData = await friendResponse.json();
+        const movieRating = friendData.ratings.find(r => r.movieId === parseInt(id));
+        return movieRating ? { 
+          name: friendData.name, 
+          rating: movieRating.rating 
+        } : null;
+      });
+
+      const ratings = (await Promise.all(friendsRatingsPromises)).filter(r => r !== null);
+      setFriendsRatings(ratings);
+    } catch (error) {
+      console.error("Error fetching friends' ratings:", error);
+    }
+  }, [userId, id]);
+
+  // Set up polling with cleanup
+  useEffect(() => {
+    if (!userId || !id) return;
+
+    const pollInterval = setInterval(() => {
+      fetchComments();
+      fetchFriendsRatings();
+    }, 5000);
+
+    return () => clearInterval(pollInterval);
+  }, [userId, id, fetchComments, fetchFriendsRatings]);
+
+  // Initial data fetch
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
@@ -26,7 +79,6 @@ const Player = () => {
           return;
         }
 
-        // Fetch movie details
         const movieResponse = await fetch(
           `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`
         );
@@ -34,7 +86,6 @@ const Player = () => {
         const movieData = await movieResponse.json();
         setMovie(movieData);
 
-        // Fetch trailer
         const videoResponse = await fetch(
           `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${TMDB_API_KEY}`
         );
@@ -45,21 +96,14 @@ const Player = () => {
         );
         setTrailer(trailer);
 
-        // Fetch comments
-        const commentsResponse = await fetch(`http://localhost:3001/movies/${id}/comments`);
-        if (!commentsResponse.ok) throw new Error('Failed to fetch comments');
-        const commentsData = await commentsResponse.json();
-        setComments(commentsData);
+        await fetchComments();
+        await fetchFriendsRatings();
 
-        // Check if movie is in user's watchlist and get rating
         const userResponse = await fetch(`http://localhost:3001/users/${userId}`);
         if (!userResponse.ok) throw new Error('Failed to fetch user data');
         const userData = await userResponse.json();
         
-        // Check watchlist using the Set data structure from server
         setIsInWatchlist(userData.watchlist.includes(parseInt(id)));
-        
-        // Check rating using the new ratings Map structure from server
         const userRatingObj = userData.ratings.find(r => r.movieId === parseInt(id));
         if (userRatingObj) {
           setUserRating(userRatingObj.rating);
@@ -71,8 +115,7 @@ const Player = () => {
     };
 
     fetchMovieData();
-  }, [id, userId]);
-
+  }, [id, userId, fetchComments, fetchFriendsRatings]);
   const handleRating = async (rating) => {
     try {
       const response = await fetch(`http://localhost:3001/users/${userId}/ratings`, {
@@ -87,8 +130,8 @@ const Player = () => {
       });
       
       if (!response.ok) throw new Error('Failed to save rating');
-      const updatedUser = await response.json();
       setUserRating(rating);
+      await fetchFriendsRatings(); // Refresh friends' ratings
     } catch (error) {
       console.error("Error saving rating:", error);
       setError("Failed to save rating. Please try again.");
@@ -108,7 +151,6 @@ const Player = () => {
       });
       
       if (!response.ok) throw new Error('Failed to update watchlist');
-      const updatedUser = await response.json();
       setIsInWatchlist(true);
     } catch (error) {
       console.error("Error updating watchlist:", error);
@@ -133,13 +175,7 @@ const Player = () => {
       });
       
       if (!response.ok) throw new Error('Failed to post comment');
-      const newCommentData = await response.json();
-      
-      // Fetch updated comments to ensure consistency with server
-      const commentsResponse = await fetch(`http://localhost:3001/movies/${id}/comments`);
-      if (!commentsResponse.ok) throw new Error('Failed to fetch updated comments');
-      const updatedComments = await commentsResponse.json();
-      setComments(updatedComments);
+      await fetchComments(); // Refresh comments immediately
       setNewComment('');
     } catch (error) {
       console.error("Error posting comment:", error);
@@ -155,45 +191,43 @@ const Player = () => {
     );
   }
 
-  if (!movie) return <div>Loading...</div>;
+
+  if (error) return <div className="player-error">{error}</div>;
+  if (!movie) return <div className="player-loading">Loading...</div>;
 
   return (
     <div className="player-page">
       <Navbar />
-      <div className="movie-header">
-        <div className="backdrop" style={{
-          backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
-        }}>
-          <div className="backdrop-overlay" />
+      <div className="player-movie-header">
+        <div 
+          className="player-backdrop"
+          style={{
+            backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
+          }}
+        >
+          <div className="player-backdrop-overlay" />
         </div>
-        <div className="movie-content">
-          <div className="poster-container">
-            <img 
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-              className="movie-poster"
-            />
-          </div>
-          <div className="movie-info">
+        <div className="player-movie-content">
+          <div className="player-movie-info">
             <h1>{movie.title}</h1>
-            <div className="movie-meta">
+            <div className="player-movie-meta">
               <span>{new Date(movie.release_date).getFullYear()}</span>
               <span>{movie.runtime} mins</span>
               <span>{movie.vote_average.toFixed(1)} ⭐</span>
             </div>
-            <p className="movie-overview">{movie.overview}</p>
-            <div className="action-buttons">
+            <p className="player-movie-overview">{movie.overview}</p>
+            <div className="player-action-buttons">
               <button 
-                className={`watchlist-btn ${isInWatchlist ? 'in-list' : ''}`}
+                className={`player-watchlist-btn ${isInWatchlist ? 'in-list' : ''}`}
                 onClick={handleAddToWatchlist}
               >
                 {isInWatchlist ? 'In Watchlist' : 'Add to Watchlist'}
               </button>
-              <div className="rating-container">
+              <div className="player-rating-container">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
-                    className={`star-btn ${star <= userRating ? 'active' : ''}`}
+                    className={`player-star-btn ${star <= userRating ? 'active' : ''}`}
                     onClick={() => handleRating(star)}
                   >
                     ★
@@ -201,6 +235,24 @@ const Player = () => {
                 ))}
               </div>
             </div>
+            {friendsRatings.length > 0 && (
+              <div className="player-friends-ratings">
+                <h3>Friends' Ratings</h3>
+                {friendsRatings.map((friend, index) => (
+                  <div key={index} className="player-friend-rating">
+                    <span>{friend.name}</span>
+                    <span>{'★'.repeat(friend.rating)}{'☆'.repeat(5-friend.rating)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="player-poster-container">
+            <img 
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+              className="player-movie-poster"
+            />
           </div>
         </div>
       </div>

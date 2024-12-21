@@ -1,34 +1,120 @@
 .title-cards {
   margin-top: 50px;
   margin-bottom: 30px;
+  padding: 0 4%;
 }
 
 .title-cards h2 {
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+  font-size: 1.4vw;
+  line-height: 1.25vw;
+  font-weight: 500;
+  color: #e5e5e5;
 }
 
 .card-list {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   overflow-x: scroll;
+  padding: 28px 4px;
+  margin: -28px -4px;
 }
 
 .card-list::-webkit-scrollbar {
   display: none;
 }
 
-.card-list img {
+.card {
+  position: relative;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.card:hover {
+  transform: scale(1.4);
+  z-index: 99;
+}
+
+.card:hover ~ .card {
+  transform: translateX(40px);
+}
+
+.card img {
   width: 240px;
   border-radius: 4px;
   cursor: pointer;
+  object-fit: cover;
+  transition: all 0.3s ease;
 }
 
-.card-list .card {
-  position: relative;
+.card:hover img {
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.card-list .card p {
+.card p {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #181818;
+  padding: 8px;
+  margin: 0;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 0 0 4px 4px;
+}
+
+.card:hover p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Handle row hover states */
+.title-cards:hover .card {
+  opacity: 0.3;
+}
+
+.title-cards:hover .card:hover {
+  opacity: 1;
+}
+
+/* Smooth sliding animation for adjacent cards */
+@media (hover: hover) {
+  .card {
+    transition: all 0.3s ease;
+  }
+
+  .title-cards:hover .card {
+    transform: translateX(-25%);
+  }
+
+  .title-cards .card:hover ~ .card {
+    transform: translateX(25%);
+  }
+
+  .title-cards .card:hover {
+    transform: scale(1.4);
+  }
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .title-cards h2 {
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .card img {
+    width: 200px;
+  }
+
+  .card:hover {
+    transform: scale(1.2);
+  }
 }

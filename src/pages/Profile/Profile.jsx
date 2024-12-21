@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
+import Footer from '../../components/Footer/Footer';
 import './Profile.css';
 
 const Profile = () => {
@@ -11,6 +12,7 @@ const Profile = () => {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const { id } = useParams();
+  const navigate = useNavigate();
   
   const currentUser = JSON.parse(sessionStorage.getItem('user'));
   const currentUserId = currentUser ? String(currentUser.id) : null;
@@ -35,12 +37,10 @@ const Profile = () => {
         setIsCurrentUser(String(currentUserId) === normalizedId);
         setIsFollowing(currentUser?.following?.map(String).includes(normalizedId) || false);
 
-        // Fetch following
         const followingPromises = userData.following.map((followId) =>
           fetch(`http://localhost:3001/users/${String(followId)}`).then(res => res.json())
         );
 
-        // Fetch followers
         const followersPromises = userData.followers.map((followerId) =>
           fetch(`http://localhost:3001/users/${String(followerId)}`).then(res => res.json())
         );
@@ -82,20 +82,51 @@ const Profile = () => {
       return;
     }
 
-    fetch(`http://localhost:3001/users/${String(currentUserId)}/follow`, {
-      method: 'POST',
+    const method = isFollowing ? 'DELETE' : 'POST';
+    const url = isFollowing 
+      ? `http://localhost:3001/users/${String(currentUserId)}/follow/${String(id)}`
+      : `http://localhost:3001/users/${String(currentUserId)}/follow`;
+    
+    const body = isFollowing ? null : JSON.stringify({ followId: String(id) });
+
+    fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ followId: String(id) }),
+      body: method === 'POST' ? body : undefined,
     })
       .then(res => {
         if (!res.ok) throw new Error("Failed to update follow status");
         return res.json();
       })
-      .then(updatedUser => {
-        sessionStorage.setItem('user', JSON.stringify(updatedUser));
+      .then(data => {
+        sessionStorage.setItem('user', JSON.stringify(data.user));
         setIsFollowing(!isFollowing);
+        
+        if (isFollowing) {
+          setFollowers(prevFollowers => 
+            prevFollowers.filter(follower => String(follower.id) !== String(currentUserId))
+          );
+        } else {
+          const currentUserData = {
+            id: currentUser.id,
+            name: currentUser.name,
+            email: currentUser.email
+          };
+          setFollowers(prevFollowers => [...prevFollowers, currentUserData]);
+        }
+
+        setUser(prevUser => ({
+          ...prevUser,
+          followers: isFollowing 
+            ? prevUser.followers.filter(id => String(id) !== String(currentUserId))
+            : [...prevUser.followers, currentUserId]
+        }));
       })
       .catch(error => console.error("Error following/unfollowing user:", error));
+  };
+
+  const handleMovieClick = (movieId) => {
+    navigate(`/player/${movieId}`);
   };
 
   if (!user) return <div className="loading">Loading...</div>;
@@ -115,10 +146,10 @@ const Profile = () => {
             </div>
             {!isCurrentUser && (
               <button 
-                className="follow-button"
+                className={`follow-button ${isFollowing ? 'following' : ''}`}
                 onClick={handleFollowToggle}
               >
-                {isFollowing ? "Unfollow" : "Follow"}
+                {isFollowing ? "Following" : "Follow"}
               </button>
             )}
           </div>
@@ -151,13 +182,13 @@ const Profile = () => {
             <div className="followers-grid">
               {followers.length > 0 ? (
                 followers.map(follower => (
-                  <Link to={`/profile/${follower.id}`} key={follower.id} className="followers-item">
-                    <div className="follower-avatar">
+                  <Link to={`/profile/${follower.id}`} key={follower.id} className="profile-card">
+                    <div className="profile-avatar">
                       {follower.name.charAt(0).toUpperCase()}
                     </div>
-                    <div className="follower-details">
-                      <div className="follower-name">{follower.name}</div>
-                      <div className="follower-email">{follower.email}</div>
+                    <div className="profile-details">
+                      <div className="profile-name">{follower.name}</div>
+                      <div className="profile-email">{follower.email}</div>
                     </div>
                   </Link>
                 ))
@@ -175,7 +206,14 @@ const Profile = () => {
             <div className="watchlist-grid">
               {watchlist.length > 0 ? (
                 watchlist.map(movie => (
-                  <div key={movie.id} className="watchlist-item">
+                  <div 
+                    key={movie.id} 
+                    className="watchlist-item"
+                    onClick={() => handleMovieClick(movie.id)}
+                    role="button"
+                    tabIndex={0}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <div className="movie-poster-container">
                       <img
                         src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -201,6 +239,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

@@ -140,7 +140,6 @@ const writeUsersData = async (data) => {
   await fs.promises.writeFile(usersFilePath, JSON.stringify(data, null, 2));
 };
 
-// Enhanced data structures for watchlist and ratings
 class UserProfile {
   constructor(userData) {
     this.id = userData.id;
@@ -375,6 +374,42 @@ app.post("/users/:id/follow", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+app.delete("/users/:id/follow/:followId", async (req, res) => {
+  const userId = req.params.id;
+  const followId = req.params.followId;
+
+  try {
+    const users = await getUsersData();
+    const userIndex = users.findIndex((u) => u.id === userId);
+    const followUserIndex = users.findIndex((u) => u.id === followId);
+
+    if (userIndex === -1 || followUserIndex === -1) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userProfile = new UserProfile(users[userIndex]);
+    const followUserProfile = new UserProfile(users[followUserIndex]);
+
+    // Remove from following
+    userProfile.following.delete(followId);
+
+    // Remove from followers
+    followUserProfile.followers.delete(userId);
+
+    users[userIndex] = userProfile.toJSON();
+    users[followUserIndex] = followUserProfile.toJSON();
+
+    await writeUsersData(users);
+
+    res.json({
+      message: "Unfollow successful",
+      user: userProfile.toJSON(),
+      unfollowedUser: followUserProfile.toJSON(),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
 
 app.post("/users/:id/ratings", async (req, res) => {
   const { movieId, rating } = req.body;
@@ -399,23 +434,28 @@ app.post("/users/:id/ratings", async (req, res) => {
   }
 });
 
-// Comments implementation using a Queue-like structure for recent comments
 class CommentQueue {
   constructor(maxSize = 100) {
     this.maxSize = maxSize;
-    this.comments = [];
   }
 
-  add(comment) {
-    this.comments.unshift(comment); // Add to front for most recent first
-    if (this.comments.length > this.maxSize) {
-      this.comments.pop(); // Remove oldest if exceeding max size
-    }
-    return this.comments;
-  }
+  getForMovie(movieId, users) {
+    // Collect all comments for the specific movie from all users
+    const allComments = [];
+    users.forEach((user) => {
+      const userComments = user.comments
+        .filter((comment) => comment.movieId === parseInt(movieId))
+        .map((comment) => ({
+          ...comment,
+          userName: user.name,
+        }));
+      allComments.push(...userComments);
+    });
 
-  getForMovie(movieId) {
-    return this.comments.filter((comment) => comment.movieId === movieId);
+    // Sort comments by timestamp in descending order (newest first)
+    return allComments
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(0, this.maxSize);
   }
 }
 
@@ -435,20 +475,23 @@ app.post("/users/:id/comments", async (req, res) => {
 
     const newComment = {
       id: uuidv4(),
-      movieId,
+      movieId: parseInt(movieId),
       text: comment,
       timestamp: new Date().toISOString(),
       userId,
     };
 
-    const userProfile = new UserProfile(users[userIndex]);
-    userProfile.comments.push(newComment);
-    commentQueue.add(newComment);
-
-    users[userIndex] = userProfile.toJSON();
+    // Add comment to user's comments array
+    users[userIndex].comments.push(newComment);
     await writeUsersData(users);
-    return res.json(newComment);
+
+    // Return the comment with the user's name
+    return res.json({
+      ...newComment,
+      userName: users[userIndex].name,
+    });
   } catch (error) {
+    console.error("Error saving comment:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -458,16 +501,11 @@ app.get("/movies/:id/comments", async (req, res) => {
 
   try {
     const users = await getUsersData();
-    const comments = commentQueue.getForMovie(movieId).map((comment) => {
-      const user = users.find((u) => u.id === comment.userId);
-      return {
-        ...comment,
-        userName: user ? user.name : "Unknown User",
-      };
-    });
+    const comments = commentQueue.getForMovie(movieId, users);
 
     return res.json(comments);
   } catch (error) {
+    console.error("Error fetching comments:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });

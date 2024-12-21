@@ -1,6 +1,6 @@
 .hero {
   position: relative;
-  height: 100vh;
+  height: 110vh;
   overflow: hidden;
 }
 
@@ -8,11 +8,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.9) 60%, transparent);
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0)
+  );
   -webkit-mask-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.9) 60%,
-    transparent
+    to bottom,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0)
   );
 }
 
@@ -25,15 +29,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 40px 0;
+  padding: 20px 0;
 }
 
 .hero-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 6%;
-  margin-bottom: 10px;
+  padding: 0 4%;
 }
 
 .hero-caption {
@@ -43,21 +46,21 @@
 
 .movie-title {
   font-size: 3rem;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-weight: 700;
 }
 
 .hero-caption p {
-  font-size: 1.1rem;
-  margin-bottom: 30px;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
   line-height: 1.5;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .poster-container {
-  width: 250px;
-  height: 400px;
-  margin-top: 50px;
+  width: 200px;
+  height: 300px;
+  margin-top: 60px;
   position: relative;
 }
 
@@ -72,7 +75,7 @@
 .hero-btns {
   display: flex;
   gap: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .hero-btns .btn {
@@ -109,7 +112,7 @@
 }
 
 .hero-titlecards {
-  padding-left: 6%;
+  padding-left: 2%;
 }
 
 .more-cards {
