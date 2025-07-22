@@ -1,0 +1,98 @@
+[
+  {
+    "id": "c94b8082-0d2a-4db9-95da-a10287ff27b6",
+    "name": "dee",
+    "email": "dyahrini@gmail.com",
+    "passwordHash": "$2b$10$D2aSgtHwLZxJJcvogrpPKup9htH6hSuuwNZZHWQ2EqTl8Kc4RvTKW",
+    "watchlist": [
+      240
+    ],
+    "ratings": [
+      {
+        "movieId": 240,
+        "rating": 5
+      }
+    ],
+    "comments": [
+      {
+        "id": "413460f2-d03a-4cce-b1bb-7ad8dc63db2d",
+        "movieId": 240,
+        "text": "I have watched the first movie and love it! Will watch this soon..",
+        "timestamp": "2024-12-21T03:40:10.395Z",
+        "userId": "c94b8082-0d2a-4db9-95da-a10287ff27b6"
+      },
+      {
+        "id": "b121d4fc-bb60-4fd0-a14f-03080112b875",
+        "movieId": 912649,
+        "text": "i love this movie!",
+        "timestamp": "2024-12-21T05:36:58.682Z",
+        "userId": "c94b8082-0d2a-4db9-95da-a10287ff27b6"
+      },
+      {
+        "id": "7eadefd9-74b2-47b7-8701-0dd12551846a",
+        "movieId": 238,
+        "text": "I love this movie!",
+        "timestamp": "2024-12-21T08:36:04.321Z",
+        "userId": "c94b8082-0d2a-4db9-95da-a10287ff27b6"
+      },
+      {
+        "id": "148db7cb-d51c-42db-9d00-927e68225240",
+        "movieId": 240,
+        "text": "I love this movie.",
+        "timestamp": "2024-12-21T08:58:41.432Z",
+        "userId": "c94b8082-0d2a-4db9-95da-a10287ff27b6"
+      },
+      {
+        "id": "e7a46bd2-702f-46ef-a70a-721c79fc9b94",
+        "movieId": 240,
+        "text": "test",
+        "timestamp": "2024-12-21T08:59:06.482Z",
+        "userId": "c94b8082-0d2a-4db9-95da-a10287ff27b6"
+      }
+    ],
+    "following": [
+      "e9ddff4b-952c-4e23-96e4-9538fb1ab664"
+    ],
+    "followers": [
+      "e9ddff4b-952c-4e23-96e4-9538fb1ab664"
+    ]
+  },
+  {
+    "id": "e9ddff4b-952c-4e23-96e4-9538fb1ab664",
+    "name": "kuno",
+    "email": "kunosama@gmail.com",
+    "passwordHash": "$2b$10$2CIXLbOuZ6uQUFgTTQUSE.m/pPDF5u0sM2Tnk2dAOlXTK2HFVSxhe",
+    "watchlist": [
+      1184918,
+      240
+    ],
+    "ratings": [
+      {
+        "movieId": 240,
+        "rating": 5
+      }
+    ],
+    "comments": [
+      {
+        "id": "5ed57e05-7c4d-416b-9b83-4d46f4b2a99c",
+        "movieId": 1184918,
+        "text": "I love this movie!",
+        "timestamp": "2024-12-21T03:47:29.264Z",
+        "userId": "e9ddff4b-952c-4e23-96e4-9538fb1ab664"
+      },
+      {
+        "id": "8dfb2faf-c95c-4aa8-b5d4-e187d71c707e",
+        "movieId": 240,
+        "text": "My friend said to watch the movie, now i'm lovin' it!",
+        "timestamp": "2024-12-21T09:04:25.312Z",
+        "userId": "e9ddff4b-952c-4e23-96e4-9538fb1ab664"
+      }
+    ],
+    "following": [
+      "c94b8082-0d2a-4db9-95da-a10287ff27b6"
+    ],
+    "followers": [
+      "c94b8082-0d2a-4db9-95da-a10287ff27b6"
+    ]
+  }
+]

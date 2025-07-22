@@ -1,0 +1,294 @@
+.player-page {
+  min-height: 100vh;
+  background-color: #141414;
+  color: #fff;
+  padding-top: 70px;
+}
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 10%, transparent);
+  transition: background-color 0.3s;
+}
+
+.navbar.scrolled {
+  background-color: #141414;
+}
+.player-movie-header {
+  position: relative;
+  min-height: 80vh;
+  padding-top: 70px;
+  margin-bottom: 3rem;
+}
+.player-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+.player-backdrop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(20, 20, 20, 1) 0%,
+    rgba(20, 20, 20, 0.8) 50%,
+    rgba(20, 20, 20, 0.4) 100%
+  );
+  z-index: 2;
+}
+.player-movie-content {
+  position: relative;
+  z-index: 3;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 4rem;
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+}
+.player-poster-container {
+  flex-shrink: 0;
+}
+
+.player-poster-container:hover {
+  transform: scale(1.02);
+}
+
+.player-movie-poster {
+  width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+.player-movie-info {
+  flex: 1;
+  max-width: 800px;
+}
+
+.player-movie-info h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.player-movie-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.player-movie-overview {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: #ffffffcc;
+}
+
+.movie-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.movie-overview {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  color: #ffffffcc;
+}
+
+.player-action-buttons {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.player-watchlist-btn {
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.player-watchlist-btn:hover {
+  background-color: #f40612;
+  transform: scale(1.05);
+}
+
+.player-watchlist-btn.in-list {
+  background-color: #333;
+}
+
+.player-watchlist-btn.in-list:hover {
+  background-color: #404040;
+}
+
+.player-rating-container {
+  display: flex;
+  gap: 0.7rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.8rem 1.2rem;
+  border-radius: 4px;
+}
+
+.player-star-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.player-star-btn:hover {
+  transform: scale(1.2);
+}
+
+.player-star-btn.active {
+  color: #e50914;
+}
+
+.trailer-section {
+  max-width: 1400px;
+  margin: 3rem auto;
+  padding: 0 4rem;
+}
+
+.trailer-container h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.comments-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 4rem;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+}
+
+.comments-section h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.comment-form {
+  margin-bottom: 3rem;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 120px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  background-color: #232323;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: white;
+  resize: vertical;
+  font-size: 1.1rem;
+  transition: border-color 0.2s ease;
+}
+
+.comment-input:focus {
+  border-color: #e50914;
+  outline: none;
+}
+
+.submit-comment {
+  padding: 0.8rem 2rem;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.submit-comment:hover {
+  background-color: #f40612;
+  transform: scale(1.05);
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.comment {
+  background-color: #232323;
+  padding: 1.5rem;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.comment:hover {
+  transform: translateX(10px);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.comment-user {
+  font-weight: 600;
+  color: #e50914;
+}
+
+.comment-date {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.comment-text {
+  line-height: 1.6;
+  color: #ffffffcc;
+  font-size: 1.1rem;
+}
+.player-friends-ratings {
+  margin-top: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 4px;
+}
+.player-friends-ratings h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.player-friend-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-friend-rating:last-child {
+  border-bottom: none;
+}
+
+.player-friend-stars {
+  color: #e50914;
+  letter-spacing: 2px;
+}

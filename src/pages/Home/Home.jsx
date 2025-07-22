@@ -59,15 +59,15 @@ const Home = () => {
             </div>
           </div>
           <div className="hero-titlecards">
-            <TitleCards />
+            <TitleCards title="Popular" />
           </div>
         </div>
       </div>
       <div className="more-cards">
-        <TitleCards title={"Trending Now"}/>
-        <TitleCards title={"Top Rated"}/>
-        <TitleCards title={"Coming Soon"}/>
-        <TitleCards title={"Loved by Your Friends"}/>
+        <TitleCards title="Trending Now" />
+        <TitleCards title="Top Rated" />
+        <TitleCards title="Coming Soon" />
+        <TitleCards title="Now Playing" />
       </div>
       <Footer/>
     </div>
