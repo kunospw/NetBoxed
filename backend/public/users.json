@@ -92,7 +92,44 @@
       "c94b8082-0d2a-4db9-95da-a10287ff27b6"
     ],
     "followers": [
-      "c94b8082-0d2a-4db9-95da-a10287ff27b6"
+      "c94b8082-0d2a-4db9-95da-a10287ff27b6",
+      "85b3871f-a4c5-460a-a5a2-efabc8f4c8e5"
     ]
+  },
+  {
+    "id": "85b3871f-a4c5-460a-a5a2-efabc8f4c8e5",
+    "name": "deewee",
+    "email": "dewee123@gmail.com",
+    "passwordHash": "$2b$10$/r/Axlpw73xg0vRPuGL0j.YV9yT/sy0vvQj/uCOQK5PaCjbZiIjni",
+    "watchlist": [
+      238,
+      803796
+    ],
+    "ratings": [
+      {
+        "movieId": 803796,
+        "rating": 5
+      }
+    ],
+    "comments": [
+      {
+        "id": "dcc22569-0368-429c-83ef-c48576aced8e",
+        "movieId": 238,
+        "text": "nom nom",
+        "timestamp": "2025-07-24T23:51:04.157Z",
+        "userId": "85b3871f-a4c5-460a-a5a2-efabc8f4c8e5"
+      },
+      {
+        "id": "17543e8f-9162-4221-995f-290c816a80e1",
+        "movieId": 803796,
+        "text": "YOO I LOVE THIS MOVIEE",
+        "timestamp": "2025-07-24T23:51:56.891Z",
+        "userId": "85b3871f-a4c5-460a-a5a2-efabc8f4c8e5"
+      }
+    ],
+    "following": [
+      "e9ddff4b-952c-4e23-96e4-9538fb1ab664"
+    ],
+    "followers": []
   }
 ]
